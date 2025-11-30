@@ -13,11 +13,11 @@
 #include <vector>
 
 struct Config {
-    std::string linksFilePath = "links.txt";
-    std::string promptsFilePath = "prompts.txt";
-    std::string progressFilePath = "progress.state";
-    std::string resultFilePath = "result.txt";
-    std::string tempJsonPath = "current_page.json";
+    std::string linksFilePath = "/home/lo/Schreibtisch/Gewinne/LinksAusDBMitId/LinksMitIdAusgelesen.txt";
+    std::string promptsFilePath = "/home/lo/Schreibtisch/Gewinne/OllamaFinal/GewinneFinalOllama/src/prompts.txt";
+    std::string progressFilePath = "/home/lo/Schreibtisch/Gewinne/OllamaFinal/GewinneFinalOllama/src/progress.state";
+    std::string resultFilePath = "/home/lo/Schreibtisch/Gewinne/OllamaFinal/GewinneFinalOllama/src/result.txt";
+    std::string tempJsonPath = "/home/lo/Schreibtisch/Gewinne/OllamaFinal/GewinneFinalOllama/src/current_page.json";
     std::string modelName = "deepseek-r1:7b";
     int pollMinutes = 15;
 };
@@ -96,6 +96,39 @@ std::string cleanHtml(const std::string &html) {
     std::string cleaned = html;
     cleaned = std::regex_replace(cleaned, std::regex("<script[\\s\\S]*?</script>", std::regex::icase), "");
     cleaned = std::regex_replace(cleaned, std::regex("<style[\\s\\S]*?</style>", std::regex::icase), "");
+
+    std::regex imgTag("<img[^>]*>", std::regex::icase);
+    std::string withImages;
+    std::sregex_iterator it(cleaned.begin(), cleaned.end(), imgTag);
+    std::sregex_iterator end;
+    size_t lastPos = 0;
+    for (; it != end; ++it) {
+        withImages.append(cleaned.substr(lastPos, it->position() - lastPos));
+        std::string imgTagStr = it->str();
+
+        std::smatch altMatch;
+        std::smatch srcMatch;
+        std::string altText;
+        std::string srcText;
+
+        if (std::regex_search(imgTagStr, altMatch, std::regex("alt=\\\"([^\\\"]*)\\\"", std::regex::icase))) {
+            altText = altMatch[1];
+        }
+        if (std::regex_search(imgTagStr, srcMatch, std::regex("src=\\\"([^\\\"]*)\\\"", std::regex::icase))) {
+            srcText = srcMatch[1];
+        }
+
+        std::string replacement = " [Bild";
+        if (!altText.empty()) replacement += " alt='" + altText + "'";
+        if (!srcText.empty()) replacement += " src='" + srcText + "'";
+        replacement += "] ";
+
+        withImages.append(replacement);
+        lastPos = it->position() + it->length();
+    }
+    withImages.append(cleaned.substr(lastPos));
+
+    cleaned = withImages;
     cleaned = std::regex_replace(cleaned, std::regex("<[^>]+>"), " ");
     cleaned = std::regex_replace(cleaned, std::regex(" +"), " ");
     return cleaned;
@@ -132,6 +165,12 @@ struct OllamaResponse {
     bool success{false};
 };
 
+std::string stripThinkingBlocks(const std::string &text) {
+    std::string cleaned = std::regex_replace(text, std::regex("<think>[\\s\\S]*?</think>", std::regex::icase), "");
+    cleaned = std::regex_replace(cleaned, std::regex("</?think>", std::regex::icase), "");
+    return trim(cleaned);
+}
+
 OllamaResponse parseOllamaOutput(const std::string &raw) {
     OllamaResponse resp;
     resp.raw = raw;
@@ -141,8 +180,9 @@ OllamaResponse parseOllamaOutput(const std::string &raw) {
         resp.thinking = raw.substr(start + 7, end - start - 7);
         resp.answer = trim(raw.substr(end + 8));
     } else {
-        resp.answer = trim(raw);
+        resp.answer = stripThinkingBlocks(raw);
     }
+    resp.answer = stripThinkingBlocks(resp.answer);
     resp.success = !resp.answer.empty();
     return resp;
 }
