@@ -1,0 +1,13 @@
+# Build artifacts
+gewinnspiel
+*.o
+*.obj
+*.exe
+*.out
+build/
+
+# Runtime files
+result.txt
+progress.state
+current_page.json
+.ollama_prompt.tmp
