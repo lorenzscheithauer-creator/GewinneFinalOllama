@@ -1,0 +1,10 @@
+Datum Anfang TXT : Dies ist das Anfangsdatum wann das Gewinnspiel gestartet hat. Format ADatum:<Tag.Monat(Zahl).jahr>
+Datum Ende TXT: Hier wird eingetragen wann das Gewinnspiel endet(Einseldeschluss/ teilnahmeschluss) Format EDatum:<Tag.Monat(Zahl).Jahr>
+Veranstalter TXT: Der veranstalter des Gewinnspiels Format Veranstalter:<Veranstaltername>
+Gewinne TXT: Hier werden alle Gewinne aufgelistet, welche man gwinnen kann. Also alle preise Format <Gewinn1, Gewinn2, ...>
+Gewinnsumme TXT: Hier wird dir totale Gewinnsumme ermittelt. Wenn es sachwerte gibt. Bitte recherschiere den Alltäglichen wert dieses genauen gegenstands online Format Gewinnsumme:<000.000.000€>
+Gewinnanzahl TXT : Hier wird aufgelistet, was wie oft gewonnen werden kann. Format Gewinnanzahl:<Gewinn1 x 000.000, Gewinn2 x 000.000>
+Loesung TXT : Hier sollst du nachgucken, ob es auf der Webseite in Form von kommentaren, etc eine loesung zum Rätsel gibt. Wenn es sowas wie ein Formular gibt, dann schreibe Format Loesung:<Formular ausfüllen> Andernfalls sowas wie Format Loesung:<Loesungswort> oder loesung<Nicht vorhanden>
+Keywords TXT : Hier sollen die mainkeywords rausgesucht werden, welche direkt ins auge stechen. Format Keywords:<Keyword1, Keyword2, ...>
+Kategorien TXT : Hier soll das Gewinnspiel in kategorien eingeordnet werden. Die vorgegebenen Kategorien aus denen du auswählen sollst sind : Austo, urlaub, Gutschein, Geld, Smartphone, Amazon Gutschein, Reisen. Wenn keine vorhanden ist mache ein strich - Format Kategorie:<Kategorie> oder Kategorie:<->
+Status TXT : Hier soll geguckt werden, ob das aktuelle Gewinnspiel noch aktiv ist entscheide zwischen True or false Format Status:<Aktiv> oder Status:<Abgelaufen>
